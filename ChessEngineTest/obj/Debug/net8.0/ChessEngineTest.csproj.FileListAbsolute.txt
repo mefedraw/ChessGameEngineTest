@@ -1,0 +1,15 @@
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\bin\Debug\net8.0\ChessEngineTest.exe
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\bin\Debug\net8.0\ChessEngineTest.deps.json
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\bin\Debug\net8.0\ChessEngineTest.runtimeconfig.json
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\bin\Debug\net8.0\ChessEngineTest.dll
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\bin\Debug\net8.0\ChessEngineTest.pdb
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.AssemblyInfoInputs.cache
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.AssemblyInfo.cs
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.csproj.CoreCompileInputs.cache
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.sourcelink.json
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.dll
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\refint\ChessEngineTest.dll
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.pdb
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ChessEngineTest.genruntimeconfig.cache
+C:\Users\fyodo.DESKTOP-9A67S1J\RiderProjects\ChessEngineTest\ChessEngineTest\obj\Debug\net8.0\ref\ChessEngineTest.dll
