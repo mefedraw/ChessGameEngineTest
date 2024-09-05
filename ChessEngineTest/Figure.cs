@@ -11,7 +11,14 @@ public enum FigureType
     None
 }
 
-public abstract class Figure
+public interface IFigure
+{
+    public char Color { get; }
+    public FigureType Type { get; }
+    public  bool PossibleMove( ref IFigure[][] board,(int,int) moveStartPosition, (int,int) moveEndPosition);
+}
+
+public abstract class Figure : IFigure
 {
     protected Figure(char color, FigureType type)
     {
@@ -19,23 +26,24 @@ public abstract class Figure
         Type = type;    
     }
 
-    public char Color { get; set; }
-    public FigureType Type { get; set; }
-
-    public abstract bool PossibleMove( ref Figure[][] board,(int,int) moveStartPosition, (int,int) moveEndPosition);
+    public char Color { get; private set; }
+    public FigureType Type { get; protected set; }
+    public abstract bool PossibleMove( ref IFigure[][] board,(int,int) moveStartPosition, (int,int) moveEndPosition);
+    
+    public virtual void Moo(){}
 }
 
 
 
 public  class Pawn : Figure
 {
-    public override bool PossibleMove(ref Figure[][] board,(int,int) moveStartPosition, (int,int) moveEndPosition)
+    public override bool PossibleMove(ref IFigure[][] board,(int,int) moveStartPosition, (int,int) moveEndPosition)
     {
         int startX = moveStartPosition.Item1;
         int startY = moveStartPosition.Item2;
         int endX = moveEndPosition.Item1;
         int endY = moveEndPosition.Item2;
-        Figure figure = board[startX][startY];
+        IFigure figure = board[startX][startY];
         if (figure == null || figure.Type != FigureType.Pawn)
         {
             return false; // Если на начальной позиции нет фигуры или это не пешка
@@ -76,14 +84,14 @@ public  class Pawn : Figure
 
 public class King : Figure
 {
-    public override bool PossibleMove(ref Figure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
+    public override bool PossibleMove(ref IFigure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
     {
         int startX = moveStartPosition.Item1; // Горизонтальная координата (столбец)
         int startY = moveStartPosition.Item2; // Вертикальная координата (строка)
         int endX = moveEndPosition.Item1;     // Горизонтальная координата (столбец)
         int endY = moveEndPosition.Item2;     // Вертикальная координата (строка)
 
-        Figure figure = board[startX][startY];
+        IFigure figure = board[startX][startY];
 
         if (figure == null || figure.Type != FigureType.King)
         {
@@ -119,14 +127,14 @@ public class King : Figure
 
 public class Queen : Figure
 {
-public override bool PossibleMove(ref Figure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
+public override bool PossibleMove(ref IFigure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
 {
     int startX = moveStartPosition.Item1; // Горизонтальная координата (столбец)
     int startY = moveStartPosition.Item2; // Вертикальная координата (строка)
     int endX = moveEndPosition.Item1;     // Горизонтальная координата (столбец)
     int endY = moveEndPosition.Item2;     // Вертикальная координата (строка)
 
-    Figure figure = board[startX][startY];
+    IFigure figure = board[startX][startY];
 
     if (figure == null || figure.Type != FigureType.Queen)
     {
@@ -215,14 +223,14 @@ public override bool PossibleMove(ref Figure[][] board, (int, int) moveStartPosi
 
 public class Bishop : Figure
 {
-    public override bool PossibleMove(ref Figure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
+    public override bool PossibleMove(ref IFigure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
     {
         int startX = moveStartPosition.Item1; // Горизонтальная координата (столбец)
         int startY = moveStartPosition.Item2; // Вертикальная координата (строка)
         int endX = moveEndPosition.Item1;     // Горизонтальная координата (столбец)
         int endY = moveEndPosition.Item2;     // Вертикальная координата (строка)
 
-        Figure figure = board[startX][startY];
+        IFigure figure = board[startX][startY];
 
         if (figure == null || figure.Type != FigureType.Bishop)
         {
@@ -277,14 +285,14 @@ public class Bishop : Figure
 public class Knight : Figure
 {
 
-    public override bool PossibleMove(ref Figure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
+    public override bool PossibleMove(ref IFigure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
     {
         int startX = moveStartPosition.Item1; // Горизонтальная координата (столбец)
         int startY = moveStartPosition.Item2; // Вертикальная координата (строка)
         int endX = moveEndPosition.Item1;     // Горизонтальная координата (столбец)
         int endY = moveEndPosition.Item2;     // Вертикальная координата (строка)
 
-        Figure figure = board[startX][startY];
+        IFigure figure = board[startX][startY];
 
         if (figure == null || figure.Type != FigureType.Knight)
         {
@@ -325,14 +333,14 @@ public class Knight : Figure
 
 public class Rook : Figure
 {
-    public override bool PossibleMove(ref Figure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
+    public override bool PossibleMove(ref IFigure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
     {
         int startX = moveStartPosition.Item1; // Горизонтальная координата (столбец)
         int startY = moveStartPosition.Item2; // Вертикальная координата (строка)
         int endX = moveEndPosition.Item1;     // Горизонтальная координата (столбец)
         int endY = moveEndPosition.Item2;     // Вертикальная координата (строка)
 
-        Figure figure = board[startX][startY];
+        IFigure figure = board[startX][startY];
 
         if (figure == null || figure.Type != FigureType.Rook)
         {

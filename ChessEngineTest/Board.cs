@@ -50,7 +50,7 @@ public class Game
         WhiteToMove = true;
     }
 
-    public Figure[][] Board;
+    public IFigure[][] Board;
 
     public bool WhiteToMove { get; set; }
 
@@ -63,7 +63,7 @@ public class Game
             (int, int) moveEndCoords = (CharToCoord(move[3]), CharToCoord(move[2]));
 
             // Проверяем, есть ли фигура на начальной позиции
-            Figure figure = Board[moveStartCoords.Item1][moveStartCoords.Item2];
+            IFigure figure = Board[moveStartCoords.Item1][moveStartCoords.Item2];
             if (figure == null)
             {
                 Console.WriteLine("Нет фигуры на начальной позиции.");

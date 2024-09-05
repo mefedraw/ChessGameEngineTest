@@ -43,7 +43,7 @@ public class Program
     }
 
     // Метод для вывода доски в консоль
-    static void PrintBoard(Figure[][] board)
+    static void PrintBoard(IFigure[][] board)
     {
         Console.WriteLine("  a b c d e f g h"); // Верхняя строка с буквами для колонок
 
@@ -71,7 +71,7 @@ public class Program
 
 
     // Метод для отображения символов фигур
-    static char GetFigureSymbol(Figure figure)
+    static char GetFigureSymbol(IFigure figure)
     {
         switch (figure.Type)
         {
