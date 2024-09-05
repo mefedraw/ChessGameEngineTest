@@ -57,7 +57,7 @@ public  class Pawn : Figure
             return true;
         }
         // Взятие фигуры по диагонали
-        if (endY == startY + direction && (endX == startX - 1 || endX == startX + 1) && board[endX][endY] != null && board[endX][endY].Color != figure.Color)
+        if ( endX== startX + direction && (endY == startY - 1 || endY == startY + 1) && board[endX][endY] != null && board[endX][endY].Color != figure.Color)
         {
             board[startX][startY] = null;
             board[endX][endY] = figure;
