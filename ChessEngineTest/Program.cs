@@ -1,4 +1,4 @@
-﻿using ChessEngineTest;
+using ChessEngineTest;
 
 public class Program
 {
@@ -32,7 +32,8 @@ public class Program
             bool success = game1.DoMove(move);
             if (success)
             {
-                Console.WriteLine("Ход выполнен.");
+                Console.WriteLine("Ход выполнен");
+
             }
             else
             {
