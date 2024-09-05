@@ -1,4 +1,4 @@
-﻿namespace ChessEngineTest;
+namespace ChessEngineTest;
 
 public class Game
 {
@@ -50,7 +50,7 @@ public class Game
         WhiteToMove = true;
     }
 
-    public Figure[][] Board { get; set; }
+    public Figure[][] Board;
 
     public bool WhiteToMove { get; set; }
 
@@ -71,7 +71,7 @@ public class Game
             }
 
             // Выполняем ход
-            return figure.PossibleMove(Board, moveStartCoords, moveEndCoords);
+            return figure.PossibleMove(ref Board,moveStartCoords, moveEndCoords);
         }
         catch (Exception ex)
         {
