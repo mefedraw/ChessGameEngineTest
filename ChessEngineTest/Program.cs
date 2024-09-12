@@ -1,4 +1,5 @@
 using ChessEngineTest;
+using ChessLogic.Figures;
 
 public class Program
 {
@@ -10,7 +11,7 @@ public class Program
         {
             // Выводим текущую доску
             Console.WriteLine("Текущая доска:");
-            PrintBoard(game1.Board);
+            game1.PrintBoardToConsole();
 
             // Чтение хода
             Console.Write("Введите ход (например, e2e4) или 'exit' для выхода: ");
