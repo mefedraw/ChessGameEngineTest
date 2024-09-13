@@ -34,7 +34,7 @@ public class Pawn : Figure
         // Ход вперед на две клетки, если пешка на своей начальной позиции
         bool isStartingPosition = (figure.Color == 'w' && startX == 1) || (figure.Color == 'b' && startX == 6);
         if (isStartingPosition && endX == startX + 2 * direction && (endY == startY) && (board[endX][endY] == null) &&
-            (board[startY][startX + direction] == null))
+            (board[startX + direction][startY] == null))
         {
             board[startX][startY] = null;
             board[endX][endY] = figure;
@@ -86,7 +86,7 @@ public class Pawn : Figure
                     if (board[column][row].Type == FigureType.King && board[column][row].Color == kingColor)
                     {
                         kingPosition = (column, row);
-                        column = 8; 
+                        column = 8;
                         break;
                     }
                 }
