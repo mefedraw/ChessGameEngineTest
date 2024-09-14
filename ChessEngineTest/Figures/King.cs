@@ -2,14 +2,14 @@
 
 public class King : Figure
 {
-    public override bool PossibleMove(ref IFigure[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
+    public override bool PossibleMove(ref IFigure?[][] board, (int, int) moveStartPosition, (int, int) moveEndPosition)
     {
         int startX = moveStartPosition.Item1; // Горизонтальная координата (столбец)
         int startY = moveStartPosition.Item2; // Вертикальная координата (строка)
         int endX = moveEndPosition.Item1; // Горизонтальная координата (столбец)
         int endY = moveEndPosition.Item2; // Вертикальная координата (строка)
 
-        IFigure figure = board[startX][startY];
+        IFigure? figure = board[startX][startY];
 
         if (figure == null || figure.Type != FigureType.King)
         {
@@ -25,13 +25,15 @@ public class King : Figure
         if (startX == 0 && startY == 4 && endX == 0 && endY == 6 && !KingDidMove) // Короткая рокировка
         {
             // Проверяем, что ладья находится на позиции (0, 7), и она не двигалась
-            IFigure rook = board[0][7];
+            IFigure? rook = board[0][7];
 
             // Приводим к типу Rook, чтобы получить доступ к RookDidMove
             if (rook is Rook castedRook && !castedRook.RookDidMove)
             {
-                // Проверяем, что клетки между королем и ладьей свободны
-                if (board[0][5] == null && board[0][6] == null)
+                // Проверяем, что клетки между королем и ладьей свободны и они не под ударом
+                if (board[0][5] == null && board[0][6] == null &&
+                    !SquareIsUnderAttack(ref board, (0, 5), figure.Color) &&
+                    !SquareIsUnderAttack(ref board, (0, 6), figure.Color))
                 {
                     // Делаем рокировку: перемещаем короля и ладью
                     board[0][4] = null; // Король покидает исходную позицию
@@ -52,13 +54,16 @@ public class King : Figure
             !KingDidMove) // Длинная рокировка
         {
             // Проверяем, что ладья находится на позиции (0, 0), и она не двигалась
-            IFigure rook = board[0][0];
+            IFigure? rook = board[0][0];
 
             // Приводим к типу Rook, чтобы получить доступ к RookDidMove
             if (rook is Rook castedRook && !castedRook.RookDidMove)
             {
-                // Проверяем, что клетки между королем и ладьей свободны
-                if (board[0][1] == null && board[0][2] == null && board[0][3] == null)
+                // Проверяем, что клетки между королем и ладьей свободны и они не под ударом
+                if (board[0][1] == null && board[0][2] == null && board[0][3] == null &&
+                    !SquareIsUnderAttack(ref board, (0, 1), figure.Color) &&
+                    !SquareIsUnderAttack(ref board, (0, 2), figure.Color) &&
+                    !SquareIsUnderAttack(ref board, (0, 3), figure.Color))
                 {
                     // Делаем рокировку: перемещаем короля и ладью
                     board[0][4] = null; // Король покидает исходную позицию
@@ -78,12 +83,14 @@ public class King : Figure
         if (startX == 7 && startY == 4 && endX == 7 && endY == 6 && !KingDidMove) // Короткая рокировка
         {
             // Проверяем, что ладья находится на позиции (0, 7), и она не двигалась
-            IFigure rook = board[7][7];
+            IFigure? rook = board[7][7];
             // Приводим к типу Rook, чтобы получить доступ к RookDidMove
             if (rook is Rook castedRook && !castedRook.RookDidMove)
             {
-                // Проверяем, что клетки между королем и ладьей свободны
-                if (board[7][5] == null && board[7][6] == null)
+                // Проверяем, что клетки между королем и ладьей свободны и они не под ударом
+                if (board[7][5] == null && board[7][6] == null &&
+                    !SquareIsUnderAttack(ref board, (7, 5), figure.Color) &&
+                    !SquareIsUnderAttack(ref board, (7, 6), figure.Color))
                 {
                     // Делаем рокировку: перемещаем короля и ладью
                     board[7][4] = null; // Король покидает исходную позицию
@@ -103,13 +110,16 @@ public class King : Figure
             !KingDidMove) // Длинная рокировка
         {
             // Проверяем, что ладья находится на позиции (0, 0), и она не двигалась
-            IFigure rook = board[7][0];
+            IFigure? rook = board[7][0];
 
             // Приводим к типу Rook, чтобы получить доступ к RookDidMove
             if (rook is Rook castedRook && !castedRook.RookDidMove)
             {
-                // Проверяем, что клетки между королем и ладьей свободны
-                if (board[7][1] == null && board[7][2] == null && board[7][3] == null)
+                // Проверяем, что клетки между королем и ладьей свободны и они не под ударом
+                if (board[7][1] == null && board[7][2] == null && board[7][3] == null &&
+                    !SquareIsUnderAttack(ref board, (7, 1), figure.Color) &&
+                    !SquareIsUnderAttack(ref board, (7, 2), figure.Color) &&
+                    !SquareIsUnderAttack(ref board, (7, 3), figure.Color))
                 {
                     // Делаем рокировку: перемещаем короля и ладью
                     board[7][4] = null; // Король покидает исходную позицию
@@ -132,12 +142,12 @@ public class King : Figure
             if (board[endX][endY] == null || board[endX][endY].Color != figure.Color)
             {
                 // проверка то что поле на которое ходит король не находится под ударом вражеских фигур
-                if (!IsUnderAttack(board, moveEndPosition, figure.Color))
+                if (!KingIsUnderAttack(board, moveEndPosition, figure.Color))
                 {
                     board[startX][startY] = null;
                     board[endX][endY] = figure;
                     KingDidMove = true;
-                    return true;   
+                    return true;
                 }
             }
         }
@@ -145,38 +155,49 @@ public class King : Figure
         return false; // Любое другое движение недопустимо для короля
     }
 
-    // Метод проверки шаха на указанной позиции
-    public override bool IsUnderAttack(IFigure[][] board, (int x, int y) position, char kingColor)
+    public override (int, int) FindKing(IFigure?[][] board, char kingColor)
     {
-        for (var column = 0; column < 8; column++)
+        for (var column = 0; column < 8; column++) // находим союзного короля
         {
             for (var row = 0; row < 8; row++)
             {
-                var figure = board[column][row];
-                // Если фигура противника
-                if (figure != null && figure.Color != kingColor)
+                if (board[column][row] != null)
                 {
-                    // Проверяем, может ли фигура атаковать клетку
-                    if (figure.PossibleMove(ref board, (column, row), position))
+                    if (board[column][row].Type == FigureType.King && board[column][row].Color == kingColor)
                     {
-                        figure.PossibleMove(ref board, position, (column, row));
-                        return true; // Клетка под ударом
+                        return (column, row);
                     }
                 }
             }
         }
 
-        return false;
+        return (0, 0);
     }
 
-    public override bool IsUnderAttack(IFigure[][] board, char kingColor)
+    public override List<(int, int)> GetPossibleMoves(ref IFigure?[][] board, (int, int) currentPos)
     {
-        throw new NotImplementedException();
-    }
+        List<(int, int)> possibleMoves = new List<(int, int)>();
+        int x = currentPos.Item1;
+        int y = currentPos.Item2;
+        var king = board[x][y];
 
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if ((i, j) != currentPos && PossibleMove(ref board, currentPos, (i, j)))
+                {
+                    PossibleMove(ref board, (i, j), currentPos);
+                    possibleMoves.Add((i, j));
+                }
+            }
+        }
+
+        return possibleMoves;
+    }
 
     public bool KingDidMove { get; set; }
-    
+
     public King(char color) : base(color, FigureType.King)
     {
     }
