@@ -4,7 +4,11 @@ public interface IFigure
 {
     public char Color { get; }
     public FigureType Type { get; }
-    public  bool PossibleMove( ref IFigure[][] board,(int,int) moveStartPosition, (int,int) moveEndPosition);
-    public bool IsUnderAttack(IFigure[][] board, (int x, int y) position, char kingColor);
-    public bool IsUnderAttack(IFigure[][] board, char kingColor);
+    public  bool PossibleMove( ref IFigure?[][] board,(int,int) moveStartPosition, (int,int) moveEndPosition);
+    protected bool SquareIsUnderAttack( ref IFigure?[][] board,(int,int) square, char pieceColor);
+    protected bool KingIsUnderAttack(IFigure?[][] board, char pieceColor);
+    public bool IsCheckmate(ref IFigure?[][] board, char color);
+
+    public List<(int, int)> GetPossibleMoves(ref IFigure?[][] board, (int, int) currentPos);
+    protected (int, int) FindKing(IFigure?[][] board, char kingColor);
 }

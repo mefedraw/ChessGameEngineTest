@@ -1,7 +1,8 @@
+using System;
 using System.Text;
 using ChessLogic.Figures;
 
-namespace ChessEngineTest;
+namespace ChessLogic;
 
 public class Game
 {
@@ -51,11 +52,24 @@ public class Game
         }
 
         WhitesTurn = true;
+
+        White_O_O = true;
+        White_O_O_O = true;
+        Black_O_O = true;
+        Black_O_O_O = true;
+        Checkmate = '-';
     }
 
-    public IFigure[][] Board;
+    public IFigure?[][] Board;
 
     public bool WhitesTurn { get; set; }
+
+    public bool White_O_O { get; set; }
+    public bool White_O_O_O { get; set; }
+    public bool Black_O_O { get; set; }
+    public bool Black_O_O_O { get; set; }
+
+    public char Checkmate { get; set; }
 
     public bool DoMove(string move)
     {
@@ -66,24 +80,49 @@ public class Game
             (int, int) moveEndCoords = (CharToCoord(move[3]), CharToCoord(move[2]));
 
             // Проверяем, есть ли фигура на начальной позиции
-            IFigure figure = Board[moveStartCoords.Item1][moveStartCoords.Item2];
+            var figure = Board[moveStartCoords.Item1][moveStartCoords.Item2];
             if (figure == null)
             {
-                Console.WriteLine("Нет фигуры на начальной позиции.");
                 return false;
             }
 
             // Выполняем ход
+            IFigure? tempfigure = Board[moveStartCoords.Item1][moveStartCoords.Item2];
             if (figure.PossibleMove(ref Board, moveStartCoords, moveEndCoords))
             {
+                if (Board[moveEndCoords.Item1][moveEndCoords.Item2]
+                    .IsCheckmate(ref Board, figure.Color == 'w' ? 'b' : 'w'))
+                {
+                    Checkmate = figure.Color == 'w' ? 'b' : 'w';
+                    Console.WriteLine("Вы поставили мат!");
+                }
+
+
+                if (tempfigure.Type == FigureType.King)
+                {
+                    if (tempfigure.Color == 'w')
+                    {
+                        White_O_O = false;
+                        White_O_O_O = false;
+                    }
+                    else
+                    {
+                        Black_O_O = false;
+                        Black_O_O_O = false;
+                    }
+                }
+                else if (tempfigure.Type == FigureType.Rook)
+                {
+                    // todo: доделать логику рокировки
+                }
+
+
                 WhitesTurn = !WhitesTurn;
                 return true;
             }
-            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка при выполнении хода: {ex.Message}");
             return false; // Возвращаем false при любой ошибке
         }
 
@@ -107,6 +146,119 @@ public class Game
         throw new ArgumentException("Некорректный символ для шахматных координат");
     }
 
+    public string GetBoardAsFEN()
+    {
+        var sb = new StringBuilder();
+
+        for (int x = 7; x >= 0; x--) // от 8-й линии к 1-й
+        {
+            int emptySquares = 0;
+
+            for (int y = 0; y < 8; y++)
+            {
+                if (Board[x][y] == null)
+                {
+                    emptySquares++; // увеличиваем счетчик пустых клеток
+                }
+                else
+                {
+                    if (emptySquares > 0)
+                    {
+                        sb.Append(emptySquares); // добавляем число пустых клеток
+                        emptySquares = 0;
+                    }
+
+                    sb.Append(GetFigureSymbol(Board[x][y])); // добавляем символ фигуры
+                }
+            }
+
+            if (emptySquares > 0)
+            {
+                sb.Append(emptySquares); // добавляем оставшиеся пустые клетки в строке
+            }
+
+            if (x > 0)
+            {
+                sb.Append('/'); // разделитель между строками доски
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    public string GetBoardAsFullFEN()
+    {
+        char currentTurn = WhitesTurn ? 'w' : 'b';
+        bool whiteCanCastleKingside = White_O_O;
+        bool whiteCanCastleQueenside = White_O_O_O;
+        bool blackCanCastleKingside = Black_O_O;
+        bool blackCanCastleQueenside = Black_O_O_O;
+        string enPassantTargetSquare = "-";
+        int halfMoveClock = 2;
+        int fullMoveNumber = 2;
+        var sb = new StringBuilder();
+
+        // 1. Генерация положения фигур на доске (как в предыдущем методе)
+        for (int x = 7; x >= 0; x--) // от 8-й линии к 1-й
+        {
+            int emptySquares = 0;
+
+            for (int y = 0; y < 8; y++)
+            {
+                if (Board[x][y] == null)
+                {
+                    emptySquares++; // увеличиваем счетчик пустых клеток
+                }
+                else
+                {
+                    if (emptySquares > 0)
+                    {
+                        sb.Append(emptySquares); // добавляем число пустых клеток
+                        emptySquares = 0;
+                    }
+
+                    sb.Append(GetFigureSymbol(Board[x][y])); // добавляем символ фигуры
+                }
+            }
+
+            if (emptySquares > 0)
+            {
+                sb.Append(emptySquares); // добавляем оставшиеся пустые клетки в строке
+            }
+
+            if (x > 0)
+            {
+                sb.Append('/'); // разделитель между строками доски
+            }
+        }
+
+        // 2. Добавление информации о ходе
+        sb.Append(' ').Append(currentTurn); // текущий ход: 'w' или 'b'
+
+        // 3. Возможность рокировки
+        sb.Append(' ');
+        if (whiteCanCastleKingside) sb.Append('K');
+        if (whiteCanCastleQueenside) sb.Append('Q');
+        if (blackCanCastleKingside) sb.Append('k');
+        if (blackCanCastleQueenside) sb.Append('q');
+        if (!whiteCanCastleKingside && !whiteCanCastleQueenside &&
+            !blackCanCastleKingside && !blackCanCastleQueenside)
+        {
+            sb.Append('-'); // если ни одна рокировка не возможна
+        }
+
+        // 4. Взятие на проходе
+        sb.Append(' ').Append(string.IsNullOrEmpty(enPassantTargetSquare) ? "-" : enPassantTargetSquare);
+
+        // 5. Счётчик полуходов
+        sb.Append(' ').Append(halfMoveClock);
+
+        // 6. Номер полного хода
+        sb.Append(' ').Append(fullMoveNumber);
+
+        return sb.ToString();
+    }
+    
     public void PrintBoardToConsole()
     {
         Console.WriteLine("  a b c d e f g h"); // Верхняя строка с буквами для колонок
@@ -133,85 +285,16 @@ public class Game
         Console.WriteLine("  a b c d e f g h"); // Нижняя строка с буквами для колонок
     }
 
-    public string GetBoardAsString()
-    {
-        var sb = new StringBuilder();
-
-        sb.AppendLine("  a b c d e f g h"); // Верхняя строка с буквами для колонок
-
-        for (int x = 7; x >= 0; x--) // Начинаем с 7, чтобы выводить сверху вниз
-        {
-            sb.Append($"{x + 1} "); // Печатаем цифру для строки
-
-            for (int y = 0; y < 8; y++)
-            {
-                if (Board[x][y] == null)
-                {
-                    sb.Append("- ");
-                }
-                else
-                {
-                    sb.Append($"{GetFigureSymbol(Board[x][y])} ");
-                }
-            }
-
-            sb.AppendLine($"{x + 1}"); // Печатаем цифру для строки с правой стороны
-        }
-
-        sb.AppendLine("  a b c d e f g h"); // Нижняя строка с буквами для колонок
-
-        return sb.ToString();
-    }
-    
-    public string GetBoardAsFEN()
-    {
-        var sb = new StringBuilder();
-
-        for (int x = 7; x >= 0; x--) // от 8-й линии к 1-й
-        {
-            int emptySquares = 0;
-
-            for (int y = 0; y < 8; y++)
-            {
-                if (Board[x][y] == null)
-                {
-                    emptySquares++; // увеличиваем счетчик пустых клеток
-                }
-                else
-                {
-                    if (emptySquares > 0)
-                    {
-                        sb.Append(emptySquares); // добавляем число пустых клеток
-                        emptySquares = 0;
-                    }
-                    sb.Append(GetFigureSymbol(Board[x][y])); // добавляем символ фигуры
-                }
-            }
-
-            if (emptySquares > 0)
-            {
-                sb.Append(emptySquares); // добавляем оставшиеся пустые клетки в строке
-            }
-
-            if (x > 0)
-            {
-                sb.Append('/'); // разделитель между строками доски
-            }
-        }
-
-        return sb.ToString();
-    }
-
-
 
 
     // Метод для отображения символов фигур
-    public char GetFigureSymbol(IFigure figure)
+    public char GetFigureSymbol(IFigure? figure)
     {
         if (figure == null)
         {
             return '-';
         }
+
         switch (figure.Type)
         {
             case FigureType.Pawn:

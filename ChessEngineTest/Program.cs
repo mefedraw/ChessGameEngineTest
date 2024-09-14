@@ -1,4 +1,4 @@
-using ChessEngineTest;
+using ChessLogic;
 using ChessLogic.Figures;
 
 public class Program
